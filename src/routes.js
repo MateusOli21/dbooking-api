@@ -16,6 +16,7 @@ routes.use(authMiddleware);
 
 routes.put('/users/:id', UserController.update);
 
+routes.get('/bookings', BookingController.index);
 routes.post('/bookings', BookingController.store);
 routes.delete('/bookings/:id', BookingController.delete);
 

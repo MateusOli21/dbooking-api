@@ -2,6 +2,16 @@ const knex = require('../../database/connection');
 const Yup = require('yup');
 
 class BookingController {
+  async index(req, res) {
+    const user_id = req.userId;
+
+    const listBookings = await knex('bookings')
+      .select('table_id', 'date', 'canceled_at')
+      .where({ user_id });
+
+    res.status(200).json(listBookings);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       table_id: Yup.number().required(),
