@@ -29,17 +29,16 @@ class TablesController {
 
     const tables = await knex('tables').select('id').orderBy('id', 'asc');
 
-    const tablesAvailable = tables.map((table) => {
-      const available = schedule.map((time) => {
-        const [hour, minute] = time.split(':');
-        const value = setSeconds(
-          setMinutes(setHours(searchDate, hour), minute),
-          0
-        );
+    const tablesSchedule = schedule.map((time) => {
+      const [hour, minute] = time.split(':');
+      const value = setSeconds(
+        setMinutes(setHours(searchDate, hour), minute),
+        0
+      );
 
+      const tablesAvailable = tables.map((table) => {
         return {
-          time,
-          value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
+          table_id: table.id,
           available:
             isAfter(value, new Date()) &&
             !bookings.find(
@@ -50,12 +49,13 @@ class TablesController {
       });
 
       return {
-        table: table.id,
-        schedule: available,
+        time,
+        value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
+        tablesAvailable,
       };
     });
 
-    res.status(200).json(tablesAvailable);
+    res.status(200).json(tablesSchedule);
   }
 }
 
