@@ -25,7 +25,10 @@ class BookingController {
     const user_id = req.userId;
     const { table_id, date } = req.body;
 
-    const dateOcuppied = await knex('bookings').where({ date }).first();
+    const dateOcuppied = await knex('bookings')
+      .where({ date })
+      .where({ table_id })
+      .first();
 
     if (dateOcuppied) {
       return res
